@@ -1,0 +1,59 @@
+@startuml
+title Кинобездна (новое решение). Диаграмма Контейнеров.
+
+footer drawn with PlantUML v. %version() and C4-PlantUML v. C4Version()
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+'LAYOUT_LEFT_RIGHT()
+
+!$ICONURL = "https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v3.0.0/icons"
+!include $ICONURL/font-awesome-5/users.puml
+!include $ICONURL/font-awesome-5/file_video.puml
+!include $ICONURL/devicons/postgresql.puml
+!include $ICONURL/devicons/go.puml
+!include $ICONURL/devicons2/rabbitmq_original.puml
+!include $ICONURL/material/local_movies.puml
+
+Person(users, "Пользователи", "Ноутбуки, смарт ТВ, мобильные устройства", $sprite="users")
+
+Boundary(CinemaAbyss, "Кинобездна") {
+    Container(front, "Приложение пользователя", $sprite="local_movies", $descr="Приложение пользователя: Web, Mobile app, Smart TV App")
+    System_Boundary(CinemaAbyssCloud_v1, "Бэкенд сервисы v1") {
+        Container(users_service, "Управление пользователями", "Go", $sprite="go")
+        Container(payments_service, "Платежная система", "Go", $sprite="go")
+        Container(subscriptions_service, "Система подписок", "Go", $sprite="go")
+    }
+
+    System_Boundary(CinemaAbyssCloud_v2, "Бэкенд сервисы v2") {
+        Container(movies_service, "Сервис фильмов", "Go", "Метаданные о фильмах (жанры, актёры, оценки)", $sprite="go")
+    }
+
+    Container(block_storage, "Хранилище", "S3", $sprite="file_video")
+    ContainerDb(db, "База данных", "PostgreSQL", $sprite="postgresql")
+}
+
+System_Ext(payment_hub, "Платежная система")
+System_Ext(movies_hub, "Онлайн-кинотеатры")
+System_Boundary("recommendation_hub", "Внешняя рекомендательная система") {
+    SystemQueue_Ext("rabbitMq", "RabbitMQ", $sprite="rabbitmq")
+}
+
+
+Rel(users, front, "Используют онлайн кинотеатр")
+Rel(front, users_service, "")
+Rel(front, payments_service, "")
+Rel(front, subscriptions_service, "")
+Rel(front, movies_service, "")
+
+Rel(users_service, db, "")
+Rel(subscriptions_service, db, "")
+
+Rel(movies_service, db, "")
+Rel(movies_service, movies_hub, "")
+
+Rel(payments_service, db, "")
+Rel(payments_service, payment_hub, "")
+
+Rel(CinemaAbyssCloud_v1, block_storage, "Как-то используется")
+Rel(CinemaAbyssCloud_v1, rabbitMq, "Как-то используется")
+
+@enduml
