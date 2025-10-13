@@ -17,16 +17,19 @@ Person(users, "Пользователи", "Ноутбуки, смарт ТВ, м
 
 Boundary(CinemaAbyss, "Кинобездна") {
     Container(front, "Приложение пользователя", $sprite="local_movies", $descr="Приложение пользователя: Web, Mobile app, Smart TV App")
-    System_Boundary(CinemaAbyssCloud_v1, "Бэкенд сервисы v1") {
+
+    Container(proxy, "API  Gateway", "", "Anti-Corruption Layer (ACL)")
+
+    Container_Boundary(CinemaAbyssCloud_v1, "Бэкенд сервисы v1") {
         Container(users_service, "Управление пользователями", "Go", $sprite="go")
         Container(payments_service, "Платежная система", "Go", $sprite="go")
         Container(subscriptions_service, "Система подписок", "Go", $sprite="go")
     }
 
-    System_Boundary(CinemaAbyssCloud_v2, "Бэкенд сервисы v2") {
+    Container_Boundary(CinemaAbyssCloud_v2, "Бэкенд сервисы v2") {
         Container(movies_service, "Сервис фильмов", "Go", "Метаданные о фильмах (жанры, актёры, оценки)", $sprite="go")
     }
-
+    Container(block_storage, "Хранилище", "S3", $sprite="file_video")
     Container(block_storage, "Хранилище", "S3", $sprite="file_video")
     ContainerDb(db, "База данных", "PostgreSQL", $sprite="postgresql")
 }
@@ -39,10 +42,11 @@ System_Boundary("recommendation_hub", "Внешняя рекомендатель
 
 
 Rel(users, front, "Используют онлайн кинотеатр")
-Rel(front, users_service, "")
-Rel(front, payments_service, "")
-Rel(front, subscriptions_service, "")
-Rel(front, movies_service, "")
+Rel(front, proxy, "")
+Rel(proxy, users_service, "")
+Rel(proxy, payments_service, "")
+Rel(proxy, subscriptions_service, "")
+Rel(proxy, movies_service, "")
 
 Rel(users_service, db, "")
 Rel(subscriptions_service, db, "")

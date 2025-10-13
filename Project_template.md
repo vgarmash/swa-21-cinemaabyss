@@ -31,8 +31,7 @@
       - "8000:8000"
     environment:
       PORT: 8000
-      MONOLITH_URL: http://monolith:8080
-      #монолит
+      MONOLITH_URL: http://monolith:8080 #монолит
       MOVIES_SERVICE_URL: http://movies-service:8081 #сервис movies
       EVENTS_SERVICE_URL: http://events-service:8082 
       GRADUAL_MIGRATION: "true" # вкл/выкл простого фиче-флага
@@ -41,7 +40,7 @@
       - cinemaabyss-network
 ```
 
-- После реализации запустите postman тесты - они все должны быть зеленые.
+- После реализации запустите postman-тесты. Инструкция по запуску тестов описана в README.md. Все тесты, кроме сервиса events, должны быть зелёные. СДЕЛАНО: [junit-report-local-2025-10-13T20-28-23.972Z.xml](junit-report-local-2025-10-13T20-28-23.972Z.xml)
 - Отправьте запросы к API Gateway:
    ```bash
    curl http://localhost:8000/api/movies
@@ -59,7 +58,8 @@
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
 Приложите скриншот тестов и скриншот состояния топиков Kafka http://localhost:8090 
-
+![Результаты тестов](Newman_test_results.png)
+![Топики Kafka](kafka_topics.png)
 
 ## Задание 3
 
