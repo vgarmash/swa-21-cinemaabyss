@@ -5,7 +5,7 @@ global:
 
 # Image pull secrets
 imagePullSecrets:
-  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6
+  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6ICJkbWRoY20xaGMyZzZaMmh3WDNwUFdrTjFUbkpHVUZoaGJWaHRTVEZvUmpSSldUVXdWR2R0VkcxMFRqSlRTemRYUXc9PSIKCQl9Cgl9Cn0=
 # Database configuration
 database:
   host: postgres
@@ -65,7 +65,7 @@ proxyService:
       cpu: 100m
       memory: 128Mi
   service:
-    port: 80
+    port: 8000
     targetPort: 8000
     type: ClusterIP
 
@@ -164,19 +164,20 @@ ingress:
   enabled: true
   className: nginx
   annotations:
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
     - host: cinemaabyss.example.com
       paths:
+        - path: /api/users
+          pathType: Prefix
+          service: monolith
+          port: 8080
         - path: /
           pathType: Prefix
           service: proxy-service
-          port: 80
-        - path: /api/events
-          pathType: Prefix
-          service: events-service
-          port: 8082
+          port: 8000
+
 
 # Application configuration
 config:
