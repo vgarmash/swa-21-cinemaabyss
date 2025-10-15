@@ -40,7 +40,7 @@
       - cinemaabyss-network
 ```
 
-- После реализации запустите postman-тесты. Инструкция по запуску тестов описана в README.md. Все тесты, кроме сервиса events, должны быть зелёные. СДЕЛАНО: [junit-report-local-2025-10-13T20-28-23.972Z.xml](junit-report-local-2025-10-13T20-28-23.972Z.xml)
+- После реализации запустите postman-тесты. Инструкция по запуску тестов описана в README.md. Все тесты, кроме сервиса events, должны быть зелёные. СДЕЛАНО: [junit-report-local-2025-10-13T20-28-23.972Z.xml](media/junit-report-local-2025-10-13T20-28-23.972Z.xml)
 - Отправьте запросы к API Gateway:
    ```bash
    curl http://localhost:8000/api/movies
@@ -58,8 +58,8 @@
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
 Приложите скриншот тестов и скриншот состояния топиков Kafka http://localhost:8090 
-![Результаты тестов](Newman_test_results.png)
-![Топики Kafka](kafka_topics.png)
+![Результаты тестов](media/Newman_test_results.png)
+![Топики Kafka](media/kafka_topics.png)
 
 ## Задание 3
 
@@ -264,17 +264,19 @@ cat .docker/config.json | base64
   11. Вызовите https://cinemaabyss.example.com/api/movies
   Вы должны увидеть вывод списка фильмов
   Можно поэкспериментировать со значением   MOVIES_MIGRATION_PERCENT в src/kubernetes/configmap.yaml и убедится, что вызовы movies уходят полностью в новый сервис
-
+  ![movies_service_in_k8s.png](media/movies_service_in_k8s.png)
   12. Запустите тесты из папки tests/postman
   ```bash
    npm run test:kubernetes
   ```
   Часть тестов с health-чек упадет, но создание событий отработает.
   Откройте логи event-service и сделайте скриншот обработки событий
-
+  ![event-service-logs.png](event-service-logs.png)
+  
+[Весь лог сервиса events-service-64f44c8c45-6zjqh.log](media/events-service-64f44c8c45-6zjqh.log)
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
-
+![movies-service-out-after-tests.png](media/movies-service-out-after-tests.png)
 
 ## Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
