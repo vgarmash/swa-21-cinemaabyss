@@ -165,7 +165,7 @@ ingress:
   className: nginx
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+#    nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
     - host: cinemaabyss.example.com
       paths:
@@ -173,8 +173,24 @@ ingress:
           pathType: Prefix
           service: monolith
           port: 8080
-        - path: /
+        - path: /api/payments
           pathType: Prefix
+          service: monolith
+          port: 8080
+        - path: /api/subscriptions
+          pathType: Prefix
+          service: monolith
+          port: 8080
+        - path: /api/movies
+          pathType: Prefix
+          service: proxy-service
+          port: 8000
+        - path: /api/events
+          pathType: Prefix
+          service: proxy-service
+          port: 8000
+        - path: /health
+          pathType: Exact
           service: proxy-service
           port: 8000
 

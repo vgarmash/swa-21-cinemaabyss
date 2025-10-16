@@ -271,7 +271,7 @@ cat .docker/config.json | base64
   ```
   Часть тестов с health-чек упадет, но создание событий отработает.
   Откройте логи event-service и сделайте скриншот обработки событий
-  ![event-service-logs.png](event-service-logs.png)
+  ![event-service-logs.png](media/event-service-logs.png)
   
 [Весь лог сервиса events-service-64f44c8c45-6zjqh.log](media/events-service-64f44c8c45-6zjqh.log)
 #### Шаг 3
