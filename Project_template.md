@@ -5,8 +5,9 @@
 1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
 Результат представьте в виде контейнерной диаграммы в нотации С4.
 Добавьте ссылку на файл в этот шаблон
-[ссылка на файл](ссылка)
 
+![CinemaAbyss_Container.png](media/to_be_system/c4_container/CinemaAbyss_Container.png)
+[CinemaAbyss_Container.puml](media/to_be_system/c4_container/CinemaAbyss_Container.puml)
 
 ## Задание 2
 
@@ -30,8 +31,7 @@
       - "8000:8000"
     environment:
       PORT: 8000
-      MONOLITH_URL: http://monolith:8080
-      #монолит
+      MONOLITH_URL: http://monolith:8080 #монолит
       MOVIES_SERVICE_URL: http://movies-service:8081 #сервис movies
       EVENTS_SERVICE_URL: http://events-service:8082 
       GRADUAL_MIGRATION: "true" # вкл/выкл простого фиче-флага
@@ -40,7 +40,7 @@
       - cinemaabyss-network
 ```
 
-- После реализации запустите postman тесты - они все должны быть зеленые.
+- После реализации запустите postman-тесты. Инструкция по запуску тестов описана в README.md. Все тесты, кроме сервиса events, должны быть зелёные. СДЕЛАНО: [junit-report-local-2025-10-13T20-28-23.972Z.xml](media/junit-report-local-2025-10-13T20-28-23.972Z.xml)
 - Отправьте запросы к API Gateway:
    ```bash
    curl http://localhost:8000/api/movies
@@ -58,7 +58,8 @@
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
 Приложите скриншот тестов и скриншот состояния топиков Kafka http://localhost:8090 
-
+![Результаты тестов](media/Newman_test_results.png)
+![Топики Kafka](media/kafka_topics.png)
 
 ## Задание 3
 
@@ -263,17 +264,19 @@ cat .docker/config.json | base64
   11. Вызовите https://cinemaabyss.example.com/api/movies
   Вы должны увидеть вывод списка фильмов
   Можно поэкспериментировать со значением   MOVIES_MIGRATION_PERCENT в src/kubernetes/configmap.yaml и убедится, что вызовы movies уходят полностью в новый сервис
-
+  ![movies_service_in_k8s.png](media/movies_service_in_k8s.png)
   12. Запустите тесты из папки tests/postman
   ```bash
    npm run test:kubernetes
   ```
   Часть тестов с health-чек упадет, но создание событий отработает.
   Откройте логи event-service и сделайте скриншот обработки событий
-
+  ![event-service-logs.png](media/event-service-logs.png)
+  
+[Весь лог сервиса events-service-64f44c8c45-6zjqh.log](media/events-service-64f44c8c45-6zjqh.log)
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
-
+![movies-service-out-after-tests.png](media/movies-service-out-after-tests.png)
 
 ## Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
@@ -349,6 +352,11 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
+Helm logs:
+![helm_logs.png](media/helm_logs.png)
+
+Movies Service:
+![Movies_service_helm.png](media/Movies_service_helm.png)
 
 # Задание 5
 Компания планирует активно развиваться и для повышения надежности, безопасности, реализации сетевых паттернов типа Circuit Breaker и канареечного деплоя вам как архитектору необходимо развернуть istio и настроить circuit breaker для monolith и movies сервисов.
@@ -414,7 +422,7 @@ You can see 21 for the upstream_rq_pending_overflow value which means 21 calls s
 ```
 
 Приложите скриншот работы circuit breaker'а
-
+![fortio_logs.png](media/fortio_logs.png)
 Удаляем все
 ```bash
 istioctl uninstall --purge

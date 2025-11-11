@@ -1,0 +1,45 @@
+server:
+  port: 8082
+
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  application:
+    name: events-service
+  cloud:
+    function:
+      definition: movieEventsInput;userEventsInput;paymentEventsInput
+    stream:
+      function:
+        definition: movieEventsInput;userEventsInput;paymentEventsInput
+      bindings:
+        movieEventsOutput:
+          destination: movie-events
+          content-type: application/json
+        movieEventsInput-in-0:
+          destination: movie-events
+          content-type: application/json
+          group: events-service-group
+        userEventsOutput:
+          destination: user-events
+          content-type: application/json
+        userEventsInput-in-0:
+          destination: user-events
+          content-type: application/json
+          group: events-service-group
+        paymentEventsOutput:
+          destination: payment-events
+          content-type: application/json
+        paymentEventsInput-in-0:
+          destination: payment-events
+          content-type: application/json
+          group: events-service-group
+      kafka:
+        binder:
+          brokers: kafka:9092
+          auto-create-topics: true
+
+logging:
+  level:
+    com.cinemaabyss.eventsservice: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
